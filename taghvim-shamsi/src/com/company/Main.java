@@ -8,45 +8,48 @@ import java.util.stream.Collectors;
 
 public class Main {
 
-    private final static String HEADER_LINE =
-            "ID,DATE_KEY,FULL_DATE_KEY,YEAR,DAY_OF_WEEK,IS_HOLIDAY,MONTH_PERSIAN_NAME,DAY_PERSIAN_NAME";//csv header
-    private final static String CSV_DELIMITER = ",";// csv delimiter
-    private final static String DATE_DELIMITER = "/";// date delimiter for example 1295/01/01
-    private final static String HOLIDAYS_FILE_PATH = "data/holidays.txt";// holidays text file path
-    private final static String HOLIDAY_TRUE_VALUE = "1";// value of IS_HOLIDAY column in case of being holiday
-    private final static String HOLIDAY_FALSE_VALUE = "0";// value of IS_HOLIDAY column in case of not being holiday
+    private static final String HEADER_LINE =
+            "ID,DATE_KEY,FULL_DATE_KEY,YEAR,MONTH,DAY_OF_WEEK,DAY_OF_MONTH,DAY_OF_YEAR,IS_HOLIDAY," +
+                    "MONTH_PERSIAN_NAME,MONTH_ENGLISH_NAME,DAY_PERSIAN_NAME,DAY_ENGLISH_NAME";//csv header
+    private static final String CSV_DELIMITER = ",";// csv delimiter
+    private static final String DATE_DELIMITER = "/";// date delimiter for example 1295/01/01
+    private static final String HOLIDAYS_FILE_PATH = "data/holidays.txt";// holidays text file path
+    private static final String HOLIDAY_TRUE_VALUE = "1";// value of IS_HOLIDAY column in case of being holiday
+    private static final String HOLIDAY_FALSE_VALUE = "0";// value of IS_HOLIDAY column in case of not being holiday
 
-    private final static int FROM_YEAR = 1395;// lower bound of year
-    private final static int TO_YEAR = 1410;// higher bound of year
+    private static final int FROM_YEAR = 1395;// lower bound of year
+    private static final int TO_YEAR = 1410;// higher bound of year
 
-    private final static int FIRST_MONTH = 1;// first month is 1
-    private final static int LAST_MONTH = 12;// last month is 12
-    private final static int MONTH_31 = 6;// first six months have 31 days
-    private final static int MONTH_30 = 11;// next five months have 30 days
+    private static final int FIRST_MONTH = 1;// first month is 1
+    private static final int LAST_MONTH = 12;// last month is 12
+    private static final int MONTH_31 = 6;// first six months have 31 days
+    private static final int MONTH_30 = 11;// next five months have 30 days
 
-    private final static int WEEK_DAYS = 7;// number of days in a week
-    private final static int WEEK_DAY_FIRST = 1;// first day index
-    private final static int WEEK_DAY_LAST = 7;// last day index
-    private final static int WEEK_DAY_START_1395 = 2;// first day of 1395 which is sunday [13950101 is sunday]
+    private static final int WEEK_DAYS = 7;// number of days in a week
+    private static final int WEEK_DAY_FIRST = 1;// first day index
+    private static final int WEEK_DAY_LAST = 7;// last day index
+    private static final int WEEK_DAY_START_1395 = 2;// first day of 1395 which is sunday [13950101 is sunday]
 
-    private final static int FROM_DAY = 1;// first day of month
-    private final static int DAY_31 = 31;// number of days in a 31 day month
-    private final static int DAY_30 = 30;// number of days in a 30 day month
-    private final static int DAY_29 = 29;// number of days in a 29 day month
-    private final static int FIRST_LEAP_YEAR = 3;// first leap year is 0003
-    private final static int LEAP_YEAR_INTERVAL = 4;// each four year we have a leap year
+    private static final int FIRST_DAY_OF_MONTH = 1;// first day of month
+    private static final int DAY_31 = 31;// number of days in a 31 day month
+    private static final int DAY_30 = 30;// number of days in a 30 day month
+    private static final int DAY_29 = 29;// number of days in a 29 day month
+    private static final int FIRST_LEAP_YEAR = 3;// first leap year is 0003
+    private static final int LEAP_YEAR_INTERVAL = 4;// each four year we have a leap year
 
     public static void main(String[] args) throws IOException {
         // read holidays to heap/ram/memory
         List<String> holidays = Files.readAllLines(Paths.get(HOLIDAYS_FILE_PATH))
                 .stream().filter(line -> !line.trim().equals("")).collect(Collectors.toList());
 
-        int weekDay = WEEK_DAY_START_1395;
+        int dayOfWeek = WEEK_DAY_START_1395;
+        int dayOfYear;
         int monthDays;
 
         System.out.println(HEADER_LINE);
         int id = 1;
         for (int year = FROM_YEAR; year <= TO_YEAR; year++) {
+            dayOfYear = 0;
             for (int month = FIRST_MONTH; month <= LAST_MONTH; month++) {
                 if (month <= MONTH_31) { //31 days
                     monthDays = DAY_31;
@@ -59,28 +62,35 @@ public class Main {
                         monthDays = DAY_29;//normal year => 29 days
                     }
                 }
-                for (int day = FROM_DAY; day <= monthDays; day++) {
+                for (int dayOfMonth = FIRST_DAY_OF_MONTH; dayOfMonth <= monthDays; dayOfMonth++) {
+                    dayOfYear++;
                     String fourDigitsYear = String.format("%04d", year);
                     String twoDigitsMonth = String.format("%02d", month);
-                    String twoDigitsDay = String.format("%02d", day);
+                    String twoDigitsDay = String.format("%02d", dayOfMonth);
 
                     String date = fourDigitsYear + twoDigitsMonth + twoDigitsDay;
                     String fullDate = fourDigitsYear + DATE_DELIMITER + twoDigitsMonth + DATE_DELIMITER + twoDigitsDay;
 
-                    String isHoliday = (weekDay == WEEK_DAYS || holidays.contains(date)) ? HOLIDAY_TRUE_VALUE : HOLIDAY_FALSE_VALUE;
+                    String holidayValue = (dayOfWeek == WEEK_DAYS || holidays.contains(date)) ? HOLIDAY_TRUE_VALUE : HOLIDAY_FALSE_VALUE;
 
                     System.out.println(id + CSV_DELIMITER +
                             date + CSV_DELIMITER +
                             fullDate + CSV_DELIMITER +
                             year + CSV_DELIMITER +
-                            weekDay + CSV_DELIMITER +
-                            isHoliday + CSV_DELIMITER +
+                            month + CSV_DELIMITER +
+                            dayOfWeek + CSV_DELIMITER +//day of week
+                            dayOfMonth + CSV_DELIMITER +//day of month
+                            dayOfYear + CSV_DELIMITER +//day of year
+                            holidayValue + CSV_DELIMITER +
                             getMonthNamePersian(month) + CSV_DELIMITER +
-                            getDayNamePersian(weekDay));
+                            getMonthNameEnglish(month) + CSV_DELIMITER +
+                            getDayNamePersian(dayOfWeek) + CSV_DELIMITER +
+                            getDayNameEnglish(dayOfWeek)
+                    );
 
-                    weekDay++;
-                    if (weekDay > WEEK_DAY_LAST)
-                        weekDay = WEEK_DAY_FIRST;
+                    dayOfWeek++;
+                    if (dayOfWeek > WEEK_DAY_LAST)
+                        dayOfWeek = WEEK_DAY_FIRST;
                     id++;
                 }
             }
@@ -115,6 +125,34 @@ public class Main {
         return "اسفند";
     }
 
+    private static String getMonthNameEnglish(Integer monthNumber) {
+        switch (monthNumber) {
+            case 1:
+                return "Farvardin";
+            case 2:
+                return "Ordibehesht";
+            case 3:
+                return "Khordad";
+            case 4:
+                return "Tir";
+            case 5:
+                return "Mordad";
+            case 6:
+                return "Shahrivar";
+            case 7:
+                return "Mehr";
+            case 8:
+                return "Aban";
+            case 9:
+                return "Azar";
+            case 10:
+                return "Dey";
+            case 11:
+                return "Bahman";
+        }
+        return "Esfand";
+    }
+
     private static String getDayNamePersian(Integer dayNumber) {
         switch (dayNumber) {
             case 1:
@@ -131,6 +169,24 @@ public class Main {
                 return "پنجشنبه";
         }
         return "جمعه";
+    }
+
+    private static String getDayNameEnglish(Integer dayNumber) {
+        switch (dayNumber) {
+            case 1:
+                return "Saturday";
+            case 2:
+                return "Sunday";
+            case 3:
+                return "Monday";
+            case 4:
+                return "Tuesday";
+            case 5:
+                return "Wednesday";
+            case 6:
+                return "Thursday";
+        }
+        return "Friday";
     }
 
 }
