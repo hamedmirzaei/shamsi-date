@@ -1,0 +1,8 @@
+
+psquid:S3776"RRefactor this method to reduce its Cognitive Complexity from 25 to the 15 allowed.(œû¿Ø8Åáƒ‰ş-
+W"squid:SwitchLastCaseIsDefaultCheckS""Add a default case to this switch.(íâİâ8ÁêÁş-
+W"squid:SwitchLastCaseIsDefaultCheck7""Add a default case to this switch.(Ä«8À‹ºş-
+V
+squid:S106"9Replace this use of System.out or System.err by a logger.(€¬Ö8ÈÑåş-
+V
+squid:S106%"9Replace this use of System.out or System.err by a logger.(Ğ±‚·8ŸÁŠ‰ş-
