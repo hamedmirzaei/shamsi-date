@@ -9,9 +9,9 @@ import java.util.stream.Collectors;
 public class Main {
 
     private static final String HEADER_LINE = "ID,DATE_KEY,FULL_DATE_KEY,YEAR,SEASON,MONTH,WEEK,DAY_OF_WEEK," +
-            "DAY_OF_MONTH,DAY_OF_YEAR,IS_HOLIDAY,SEASON_PERSIAN_NAME,SEASON_ENGLISH_NAME,MONTH_PERSIAN_NAME," +
+            "DAY_OF_MONTH,DAY_OF_YEAR,HOLIDAY,SEASON_PERSIAN_NAME,SEASON_ENGLISH_NAME,MONTH_PERSIAN_NAME," +
             "MONTH_ENGLISH_NAME,DAY_PERSIAN_NAME,DAY_ENGLISH_NAME";//csv header
-    
+
     private static final String CSV_DELIMITER = ",";// csv delimiter
     private static final String DATE_DELIMITER = "/";// date delimiter for example 1295/01/01
     private static final String STRING_QUALIFIER = "";// qualifier for strings
