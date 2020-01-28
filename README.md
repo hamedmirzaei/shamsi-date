@@ -1,7 +1,7 @@
 # shamsi-date
 This is some work around Shamsi/Gregorian/Persian date
 
-# What it includes
+# what it has
 ## holidays txt file
 Each line is a holiday date in format yyyymmdd
 
