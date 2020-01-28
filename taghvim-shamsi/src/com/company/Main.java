@@ -8,17 +8,23 @@ import java.util.stream.Collectors;
 
 public class Main {
 
-    private static final String HEADER_LINE =
-            "ID,DATE_KEY,FULL_DATE_KEY,YEAR,MONTH,WEEK,DAY_OF_WEEK,DAY_OF_MONTH,DAY_OF_YEAR,IS_HOLIDAY," +
-                    "MONTH_PERSIAN_NAME,MONTH_ENGLISH_NAME,DAY_PERSIAN_NAME,DAY_ENGLISH_NAME";//csv header
+    private static final String HEADER_LINE = "ID,DATE_KEY,FULL_DATE_KEY,YEAR,SEASON,MONTH,WEEK,DAY_OF_WEEK," +
+            "DAY_OF_MONTH,DAY_OF_YEAR,IS_HOLIDAY,SEASON_PERSIAN_NAME,SEASON_ENGLISH_NAME,MONTH_PERSIAN_NAME," +
+            "MONTH_ENGLISH_NAME,DAY_PERSIAN_NAME,DAY_ENGLISH_NAME";//csv header
+    
     private static final String CSV_DELIMITER = ",";// csv delimiter
     private static final String DATE_DELIMITER = "/";// date delimiter for example 1295/01/01
+    private static final String STRING_QUALIFIER = "";// qualifier for strings
+
     private static final String HOLIDAYS_FILE_PATH = "data/holidays.txt";// holidays text file path
     private static final String HOLIDAY_TRUE_VALUE = "1";// value of IS_HOLIDAY column in case of being holiday
     private static final String HOLIDAY_FALSE_VALUE = "0";// value of IS_HOLIDAY column in case of not being holiday
+    private static final String HOLIDAYS_QUALIFIER = "";// qualifier for is_holiday field
 
     private static final int FROM_YEAR = 1395;// lower bound of year
     private static final int TO_YEAR = 1410;// higher bound of year
+
+    private static final int SEASON_MONTHS = 3;// number of months per season
 
     private static final int FIRST_MONTH = 1;// first month is 1
     private static final int LAST_MONTH = 12;// last month is 12
@@ -73,22 +79,26 @@ public class Main {
 
                     String holidayValue = (dayOfWeek == WEEK_DAYS || holidays.contains(date)) ? HOLIDAY_TRUE_VALUE : HOLIDAY_FALSE_VALUE;
 
-                    int week = (dayOfYear % 7 == 0) ? (dayOfYear / 7) : (dayOfYear / 7 + 1);
+                    int week = (dayOfYear % WEEK_DAYS == 0) ? (dayOfYear / WEEK_DAYS) : (dayOfYear / WEEK_DAYS + 1);
+                    int season = (month % SEASON_MONTHS == 0) ? (dayOfYear / SEASON_MONTHS) : (dayOfYear / SEASON_MONTHS + 1);
 
                     System.out.println(id + CSV_DELIMITER +
                             date + CSV_DELIMITER +
-                            fullDate + CSV_DELIMITER +
-                            year + CSV_DELIMITER +
-                            month + CSV_DELIMITER +
-                            week + CSV_DELIMITER +
+                            STRING_QUALIFIER + fullDate + STRING_QUALIFIER + CSV_DELIMITER +
+                            year + CSV_DELIMITER +//year number
+                            season + CSV_DELIMITER +// season of year
+                            month + CSV_DELIMITER +// month of year
+                            week + CSV_DELIMITER +// week of year
                             dayOfWeek + CSV_DELIMITER +// day of week
                             dayOfMonth + CSV_DELIMITER +// day of month
                             dayOfYear + CSV_DELIMITER +// day of year
-                            holidayValue + CSV_DELIMITER +
-                            getMonthNamePersian(month) + CSV_DELIMITER +
-                            getMonthNameEnglish(month) + CSV_DELIMITER +
-                            getDayNamePersian(dayOfWeek) + CSV_DELIMITER +
-                            getDayNameEnglish(dayOfWeek)
+                            HOLIDAYS_QUALIFIER + holidayValue + HOLIDAYS_QUALIFIER + CSV_DELIMITER +
+                            STRING_QUALIFIER + getSeasonNamePersian(season) + STRING_QUALIFIER + CSV_DELIMITER +
+                            STRING_QUALIFIER + getSeasonNameEnglish(season) + STRING_QUALIFIER + CSV_DELIMITER +
+                            STRING_QUALIFIER + getMonthNamePersian(month) + STRING_QUALIFIER + CSV_DELIMITER +
+                            STRING_QUALIFIER + getMonthNameEnglish(month) + STRING_QUALIFIER + CSV_DELIMITER +
+                            STRING_QUALIFIER + getDayNamePersian(dayOfWeek) + STRING_QUALIFIER + CSV_DELIMITER +
+                            STRING_QUALIFIER + getDayNameEnglish(dayOfWeek) + STRING_QUALIFIER
                     );
 
                     dayOfWeek++;
@@ -190,6 +200,30 @@ public class Main {
                 return "Thursday";
         }
         return "Friday";
+    }
+
+    private static String getSeasonNamePersian(Integer seasonNumber) {
+        switch (seasonNumber) {
+            case 1:
+                return "بهار";
+            case 2:
+                return "تابستان";
+            case 3:
+                return "پاییز";
+        }
+        return "زمستان";
+    }
+
+    private static String getSeasonNameEnglish(Integer seasonNumber) {
+        switch (seasonNumber) {
+            case 1:
+                return "Spring";
+            case 2:
+                return "Summer";
+            case 3:
+                return "Fall";
+        }
+        return "Winter";
     }
 
 }
