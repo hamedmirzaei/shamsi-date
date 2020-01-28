@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 public class Main {
 
     private static final String HEADER_LINE =
-            "ID,DATE_KEY,FULL_DATE_KEY,YEAR,MONTH,DAY_OF_WEEK,DAY_OF_MONTH,DAY_OF_YEAR,IS_HOLIDAY," +
+            "ID,DATE_KEY,FULL_DATE_KEY,YEAR,MONTH,WEEK,DAY_OF_WEEK,DAY_OF_MONTH,DAY_OF_YEAR,IS_HOLIDAY," +
                     "MONTH_PERSIAN_NAME,MONTH_ENGLISH_NAME,DAY_PERSIAN_NAME,DAY_ENGLISH_NAME";//csv header
     private static final String CSV_DELIMITER = ",";// csv delimiter
     private static final String DATE_DELIMITER = "/";// date delimiter for example 1295/01/01
@@ -51,15 +51,15 @@ public class Main {
         for (int year = FROM_YEAR; year <= TO_YEAR; year++) {
             dayOfYear = 0;
             for (int month = FIRST_MONTH; month <= LAST_MONTH; month++) {
-                if (month <= MONTH_31) { //31 days
+                if (month <= MONTH_31) { // 31 days
                     monthDays = DAY_31;
-                } else if (month <= MONTH_30) {//30 days
+                } else if (month <= MONTH_30) {// 30 days
                     monthDays = DAY_30;
-                } else {//29 or 30 days
-                    if ((FIRST_LEAP_YEAR - year) % LEAP_YEAR_INTERVAL == 0) {//leap year => 30 days
+                } else {// 29 or 30 days
+                    if ((FIRST_LEAP_YEAR - year) % LEAP_YEAR_INTERVAL == 0) {// leap year => 30 days
                         monthDays = DAY_30;
                     } else {
-                        monthDays = DAY_29;//normal year => 29 days
+                        monthDays = DAY_29;// normal year => 29 days
                     }
                 }
                 for (int dayOfMonth = FIRST_DAY_OF_MONTH; dayOfMonth <= monthDays; dayOfMonth++) {
@@ -73,14 +73,17 @@ public class Main {
 
                     String holidayValue = (dayOfWeek == WEEK_DAYS || holidays.contains(date)) ? HOLIDAY_TRUE_VALUE : HOLIDAY_FALSE_VALUE;
 
+                    int week = (dayOfYear % 7 == 0) ? (dayOfYear / 7) : (dayOfYear / 7 + 1);
+
                     System.out.println(id + CSV_DELIMITER +
                             date + CSV_DELIMITER +
                             fullDate + CSV_DELIMITER +
                             year + CSV_DELIMITER +
                             month + CSV_DELIMITER +
-                            dayOfWeek + CSV_DELIMITER +//day of week
-                            dayOfMonth + CSV_DELIMITER +//day of month
-                            dayOfYear + CSV_DELIMITER +//day of year
+                            week + CSV_DELIMITER +
+                            dayOfWeek + CSV_DELIMITER +// day of week
+                            dayOfMonth + CSV_DELIMITER +// day of month
+                            dayOfYear + CSV_DELIMITER +// day of year
                             holidayValue + CSV_DELIMITER +
                             getMonthNamePersian(month) + CSV_DELIMITER +
                             getMonthNameEnglish(month) + CSV_DELIMITER +

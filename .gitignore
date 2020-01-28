@@ -1,5 +1,6 @@
 HELP.md
 taghvim-shamsi/target/
+taghvim-shamsi/out/
 !taghvim-shamsi/.mvn/wrapper/maven-wrapper.jar
 !taghvim-shamsi/**/src/main/**
 !taghvim-shamsi/**/src/test/**
