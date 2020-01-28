@@ -1,0 +1,31 @@
+HELP.md
+taghvim-shamsi/target/
+!taghvim-shamsi/.mvn/wrapper/maven-wrapper.jar
+!taghvim-shamsi/**/src/main/**
+!taghvim-shamsi/**/src/test/**
+
+### STS ###
+taghvim-shamsi/.apt_generated
+taghvim-shamsi/.classpath
+taghvim-shamsi/.factorypath
+taghvim-shamsi/.project
+taghvim-shamsi/.settings
+taghvim-shamsi/.springBeans
+taghvim-shamsi/.sts4-cache
+
+### IntelliJ IDEA ###
+taghvim-shamsi/.idea
+taghvim-shamsi/*.iws
+taghvim-shamsi/*.iml
+taghvim-shamsi/*.ipr
+
+### NetBeans ###
+taghvim-shamsi/nbproject/private/
+taghvim-shamsi/nbbuild/
+taghvim-shamsi/dist/
+taghvim-shamsi/nbdist/
+taghvim-shamsi/.nb-gradle/
+taghvim-shamsi/build/
+
+### VS Code ###
+taghvim-shamsi/.vscode/
